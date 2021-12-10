@@ -323,7 +323,7 @@ public class JdbcCustomerDAO extends JdbcDaoSupport implements CustomerDAO {
 	
 	public void insertLog(int user, String question, int answers) {
 		String sql = "INSERT INTO bucheon.phone_log (qtime, user, question, answers) VALUES (now(), ?, ?, ?)";
-		getJdbcTemplate().update(sql, new Object[] { user, question, answers }); 
+		getJdbcTemplate().update(sql, new Object[] { user, question, answers });
 	}
 	
 

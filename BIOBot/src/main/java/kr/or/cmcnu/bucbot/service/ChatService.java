@@ -85,7 +85,7 @@ public class ChatService {
 	        	this.edgeTemplate.say(room, msg.toString());
 	        }
 			
-			this.customerDAO.insertLog(user, content, plist.size()); 
+			this.customerDAO.insertLog(user, content, plist.size());
 		}
 
 		else {
