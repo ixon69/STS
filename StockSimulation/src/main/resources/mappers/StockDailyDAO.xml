@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.ixon.stock.dao.StockDailyDAO">
+ 
+    <select id="getStockDaily" parameterType="com.ixon.stock.dto.StockDailyDTO" 
+                                  resultType="com.ixon.stock.dto.StockDailyDTO">
+/* StockDailyDAO.xml | getStockDaily */
+        SELECT stockcode, day, start, high, low, last, vol
+          FROM stockdaily
+        <where>
+          <if test='stockcode != null and stockcode != ""'>
+            AND stockcode = #{stockcode}
+          </if>
+          <if test='day != null and day != ""'>
+            AND day = #{day}
+          </if>
+        </where>
+         ORDER BY stockcode
+    </select>
+
+    <select id="getLastSD" parameterType="com.ixon.stock.dto.StockDailyDTO"
+                                  resultType="com.ixon.stock.dto.StockDailyDTO">
+/* StockDailyDAO.xml | getLastSD */
+        SELECT stockcode, day, start, high, low, last, vol
+          FROM stockdaily
+        <where>
+          <if test='stockcode != null and stockcode != ""'>
+            AND stockcode = #{stockcode}
+          </if>
+          <if test='day != null and day != ""'>
+<![CDATA[
+            AND day = (SELECT MAX(day) FROM stockdaily WHERE day < #{day})
+]]>
+          </if>
+        </where>
+         ORDER BY stockcode
+    </select>
+    
+    <select id="getDays" parameterType="String"
+                                  resultType="String">
+/* StockDailyDAO.xml | getDays */
+        SELECT DISTINCT day
+          FROM stockdaily
+        <where>
+          <if test='day != null and day != ""'>
+<![CDATA[
+            AND day >= #{day}
+]]>
+          </if>
+        </where>
+         ORDER BY day
+    </select>
+
+</mapper>

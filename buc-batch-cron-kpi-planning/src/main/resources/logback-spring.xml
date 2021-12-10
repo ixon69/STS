@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <contextName>BucheonKPICron</contextName>
+
+    <property name="logHome" value="./logs" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logHome}/BucheonKPICron.%d{yyyyMMdd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>15MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %thread %-5level %logger - %m%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="kr.or.cmcnu.bucbatch" level="INFO" />
+    <logger name="TargetMapper" level="DEBUG" />
+    <logger name="org.springframework.jdbc" level="DEBUG" />
+	
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="fileAppender" />
+    </root>
+
+</configuration>

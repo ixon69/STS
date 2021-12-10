@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ixon.stock.dao.SellDAO">
+
+    <insert id="insertSell" parameterType="com.ixon.stock.dto.SellDTO">
+/* SellDAO.xml | insertSell */
+        INSERT INTO sell
+               (buyid, day, price, vol, fee)
+        VALUES (#{buyid}, #{day}, #{price}, #{vol}, #{fee})
+    </insert>
+   
+</mapper>

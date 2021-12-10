@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ixon.stock.dao.SimpleModelDAO">
+
+    <select id="getQuantity" parameterType="com.ixon.stock.dto.BuyDTO"
+                             resultType="java.util.HashMap">
+/* SimpleModelDAO.xml | getQuantity */
+        SELECT SUM(vol) quantity
+          FROM trading
+        <where>
+          <if test='model != null and model != ""'>
+            AND model = #{model}
+          </if>
+          <if test='stockcode != null and stockcode != ""'>
+            AND stockcode = #{stockcode}
+          </if>
+          <if test='day != null and day != ""'>
+<![CDATA[
+            AND day <= #{day}
+]]>
+          </if>
+        </where>
+    </select>
+
+    <select id="getStockDaily" parameterType="String"
+                               resultType="java.util.HashMap">
+/* SimpleModelDAO.xml | getStockDaily */
+        SELECT a.stockcode, a.day, a.start, a.high, a.low, a.last, a.vol,
+               b.stockcode laststockcode, b.day lastday, b.start laststart, b.high lasthig, b.low lastlow, b.last lastlast, b.vol lastvol
+          FROM stockdaily a, stockdaily b
+         WHERE a.day = #{day}
+           AND b.day = (SELECT MAX(day) 
+                          FROM stockdaily
+<![CDATA[
+                         WHERE day < #{day}
+]]>
+               )
+           AND a.stockcode = b.stockcode
+    </select>
+    
+</mapper>
