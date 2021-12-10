@@ -59,11 +59,12 @@ public class ChatService {
 	        + "(번호 검색 예시) 2379";
 
     public void doWelcome(TeamupEventChat eventChat) { // 대화방 입장 시 실행
-        this.edgeTemplate.say(eventChat.getRoom(), this.infoCmt);
+        //this.edgeTemplate.say(eventChat.getRoom(), this.infoCmt);
     }
 	
 	public void doChat(ChatMessage chatMessage, int room) throws UnsupportedEncodingException {
 		String content = chatMessage.getContent().trim();
+		int user = chatMessage.getUser();
 		if ((content.equals("/?")) || (content.equals("/help")) || (content.equals("/도움말")) || (content.equals("?"))
 				|| (content.equals("help")) || (content.equals("도움말"))) {
 			this.edgeTemplate.say(room, this.infoCmt);
@@ -83,6 +84,8 @@ public class ChatService {
 	        	}
 	        	this.edgeTemplate.say(room, msg.toString());
 	        }
+			
+			this.customerDAO.insertLog(user, content, plist.size()); 
 		}
 
 		else {
@@ -97,6 +100,8 @@ public class ChatService {
 	        	}
 	        	this.edgeTemplate.say(room, msg.toString());
 	        }
+
+			this.customerDAO.insertLog(user, content, plist.size());
 		}
 
 /*		else if (content.startsWith("/진료일정"))

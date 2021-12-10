@@ -42,7 +42,7 @@ public interface CustomerDAO
 	public List<String> getPhoneNumber(String phonename);
 	public List<String> getPhoneName(String phonenumber);
 
-	
+	public void insertLog(int user, String question, int answers); 
 	
 }
 

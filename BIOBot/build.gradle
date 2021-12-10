@@ -5,11 +5,11 @@ plugins {
 }
 
 group = 'kr.or.cmcnu.bucbot'
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.8'  
 
 apply plugin: 'war'
 
-version = '0.7.0'
+version = '0.8.0'
 
 war {
     baseName = project.name
