@@ -74,7 +74,7 @@ public class ChatService {
 		
 		else if (StringUtil.isNumeric(content)) {
 			StringBuffer msg = new StringBuffer();
-			List<String> plist = this.customerDAO.getPhoneName(content);
+			List<String> plist = this.customerDAO.getPhoneNumber(content);
 			
 			if (plist.size() == 0) {
 	        	this.edgeTemplate.say(room, "검색결과가 없습니다. 검색어를 다시 입력해 주세요.\n(명칭 검색 예시) 초음파\n(명칭 검색 예시) 나5\n(명칭 검색 예시) 신경  접수\n(번호 검색 예시) 2379");
@@ -90,10 +90,22 @@ public class ChatService {
 
 		else {
 			StringBuffer msg = new StringBuffer();
-			List<String> plist = this.customerDAO.getPhoneNumber(content);
+			List<String> plist = this.customerDAO.getPhoneName(content);
 			
 			if (plist.size() == 0) {
-	        	this.edgeTemplate.say(room, "검색결과가 없습니다. 검색어를 다시 입력해 주세요.\n(명칭 검색 예시) 초음파\n(명칭 검색 예시) 나5\n(명칭 검색 예시) 신경  접수\n(번호 검색 예시) 2379");
+				String new_content = this.customerDAO.getSynonym(content);
+				if (!new_content.equals(content)) { 
+					List<String> new_plist = this.customerDAO.getPhoneName(new_content);
+					if (new_plist.size() == 0) {
+			        	this.edgeTemplate.say(room, "검색결과가 없습니다. 검색어를 다시 입력해 주세요.\n(명칭 검색 예시) 초음파\n(명칭 검색 예시) 나5\n(명칭 검색 예시) 신경  접수\n(번호 검색 예시) 2379");
+			        } else {
+			        	for(Object obj : new_plist) {
+			        		msg.append((String)obj+"\n");
+			        	}
+			        	this.edgeTemplate.say(room, msg.toString());
+			        }
+				}
+				else this.edgeTemplate.say(room, "검색결과가 없습니다. 검색어를 다시 입력해 주세요.\n(명칭 검색 예시) 초음파\n(명칭 검색 예시) 나5\n(명칭 검색 예시) 신경  접수\n(번호 검색 예시) 2379");
 	        } else {
 	        	for(Object obj : plist) {
 	        		msg.append((String)obj+"\n");

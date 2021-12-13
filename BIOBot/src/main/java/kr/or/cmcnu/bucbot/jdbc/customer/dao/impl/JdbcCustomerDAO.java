@@ -291,23 +291,23 @@ public class JdbcCustomerDAO extends JdbcDaoSupport implements CustomerDAO {
 		return msg;
 	}//svrhealth
 	
-	public List<String> getPhoneNumber(String phonename) {
+	public List<String> getPhoneName(String phonename) {
 		String[] s = phonename.trim().split(" ");
 		String sql = "SELECT CONCAT(phone, ' - ', department, ' ', part) FROM bucheon.phone_inside";
 		for(int i = 0; i < s.length; i++) {
 			if(s[i].equals("")) continue;
 			if(i == 0) sql = sql + " WHERE";
 			else sql = sql + " AND";
-			if(!s[i].equals("팀") & s[i].endsWith("팀")) s[i] = s[i].substring(0, s[i].lastIndexOf("팀"));
-			if(!s[i].equals("과") & s[i].endsWith("과")) s[i] = s[i].substring(0, s[i].lastIndexOf("과"));
-			if(!s[i].equals("실") & s[i].endsWith("실")) s[i] = s[i].substring(0, s[i].lastIndexOf("실"));
-			if(!s[i].equals("센터") & s[i].endsWith("센터")) s[i] = s[i].substring(0, s[i].lastIndexOf("센터"));
+			if(s[i].length() > 2 & !s[i].equals("팀") & s[i].endsWith("팀")) s[i] = s[i].substring(0, s[i].lastIndexOf("팀"));
+			else if(s[i].length() > 2 & !s[i].equals("과") & s[i].endsWith("과")) s[i] = s[i].substring(0, s[i].lastIndexOf("과"));
+			else if(s[i].length() > 2 & !s[i].equals("실") & s[i].endsWith("실")) s[i] = s[i].substring(0, s[i].lastIndexOf("실"));
+			else if(s[i].length() > 3 & !s[i].equals("센터") & s[i].endsWith("센터")) s[i] = s[i].substring(0, s[i].lastIndexOf("센터"));
 			sql = sql + " (department LIKE '%"+s[i]+"%' OR part LIKE '%"+s[i]+"%')";
 		}
 		return getJdbcTemplate().queryForList(sql, String.class);
 	}
 	
-	public List<String> getPhoneName(String phonenumber) {
+	public List<String> getPhoneNumber(String phonenumber) {
 		String sql = "SELECT CONCAT(phone, ' - ', department, ' ', part) FROM bucheon.phone_inside "
 				    + "WHERE TRIM(SUBSTRING_INDEX(phone, ',', 1)) = '"+phonenumber+"' "
 				    + "OR TRIM(SUBSTRING_INDEX(phone, ',', -1)) = '"+phonenumber+"' "
@@ -325,6 +325,31 @@ public class JdbcCustomerDAO extends JdbcDaoSupport implements CustomerDAO {
 		String sql = "INSERT INTO bucheon.phone_log (qtime, user, question, answers) VALUES (now(), ?, ?, ?)";
 		getJdbcTemplate().update(sql, new Object[] { user, question, answers });
 	}
-	
+
+	public String getSynonym(String phonename) {
+		String[] s = phonename.trim().split(" ");
+		String[] rtn_synonym = new String[s.length];
+		StringBuffer rtn_string = new StringBuffer();
+
+		for(int i = 0; i < s.length; i++) {
+			if(s[i].equals("")) continue;
+			String sql = "SELECT synonym FROM bucheon.phone_synonym WHERE question = '"+s[i]+"'";
+			List<String> synonym = getJdbcTemplate().queryForList(sql, String.class);
+			if(synonym.size() > 0)
+		        for(Object obj : synonym) {
+		        	rtn_synonym[i] = (String)obj;
+		        }
+			else
+				 rtn_synonym[i] = s[i];
+		}
+
+		for(int i = 0; i < rtn_synonym.length; i++) {
+			if(i != 0) rtn_string.append(" ");
+			rtn_string.append(rtn_synonym[i]);
+		}
+		
+		return rtn_string.toString();
+	}
+
 
 }

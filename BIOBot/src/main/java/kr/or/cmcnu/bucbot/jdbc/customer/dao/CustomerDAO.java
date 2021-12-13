@@ -44,6 +44,8 @@ public interface CustomerDAO
 
 	public void insertLog(int user, String question, int answers);
 	
+	public String getSynonym(String phonename);
+	
 }
 
 
