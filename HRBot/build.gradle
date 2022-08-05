@@ -1,0 +1,54 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'kr.or.cmcnu.bucbot'
+sourceCompatibility = '1.8'
+
+apply plugin: 'war'
+
+version = '0.8.0'
+
+war {
+    baseName = project.name
+    version = project.version + '-' + new Date().format('yyyyMMdd-HHmmss')
+
+    ant.propertyfile(
+            file: "src/main/resources/version.properties") {
+        entry(key: "project.version", value: baseName + "-" + version)
+    }
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+	annotationProcessor 'org.projectlombok:lombok'
+	compile 'org.springframework.boot:spring-boot-starter-jdbc'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.0.8.RELEASE'
+    compile 'org.apache.httpcomponents:httpclient:4.4.1'
+    compile 'mysql:mysql-connector-java:8.0.19'
+    compile 'org.reflections:reflections:0.9.10'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.apache.commons:commons-dbcp2:2.1.1'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.jsoup:jsoup:1.11.2'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}

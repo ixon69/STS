@@ -55,7 +55,7 @@ public class ChatService {
 	private String infoCmt = "안녕하세요.\n원내전화번호부(시설팀) 조회 서비스를 시범적으로 제공하고 있습니다.\n\n"
 			+ "(명칭 검색 예시) 초음파\n"
 			+ "(명칭 검색 예시) 나5\n"
-			+ "(명칭 검색 예시) 신경  접수\n"
+			+ "(명칭 검색 예시) 신경 접수\n"
 	        + "(번호 검색 예시) 2379";
 
     public void doWelcome(TeamupEventChat eventChat) { // 대화방 입장 시 실행
@@ -63,15 +63,17 @@ public class ChatService {
     }
 	
 	public void doChat(ChatMessage chatMessage, int room) throws UnsupportedEncodingException {
-		String content = chatMessage.getContent().trim();
+		String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
+		// 특수문자 제거 2022/08/05
+		String content = chatMessage.getContent().trim().replaceAll(match, "");
 		int user = chatMessage.getUser();
+
 		if ((content.equals("/?")) || (content.equals("/help")) || (content.equals("/도움말")) || (content.equals("?"))
 				|| (content.equals("help")) || (content.equals("도움말"))) {
 			this.edgeTemplate.say(room, this.infoCmt);
 		} else if (content.equals("ver")) {
 			this.edgeTemplate.say(room, this.version);
 		}
-		
 		else if (StringUtil.isNumeric(content)) {
 			StringBuffer msg = new StringBuffer();
 			List<String> plist = this.customerDAO.getPhoneNumber(content);
@@ -94,7 +96,7 @@ public class ChatService {
 			
 			if (plist.size() == 0) {
 				String new_content = this.customerDAO.getSynonym(content);
-				if (!new_content.equals(content)) { 
+				if (!new_content.equals(content)) {
 					List<String> new_plist = this.customerDAO.getPhoneName(new_content);
 					if (new_plist.size() == 0) {
 			        	this.edgeTemplate.say(room, "검색결과가 없습니다. 검색어를 다시 입력해 주세요.\n(명칭 검색 예시) 초음파\n(명칭 검색 예시) 나5\n(명칭 검색 예시) 신경  접수\n(번호 검색 예시) 2379");

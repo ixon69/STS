@@ -1,0 +1,41 @@
+부천정보운영봇 배포
+
+1. 빌드
+eclipse Gradle Tasks 에서 build 더블 클릭
+저장경로 : eclipse 프로젝트 경로의 \build\libs
+
+2. 서비스 등록
+참고 : http://cpsally.blogspot.com/2018/06/spring-boot-as-windows-service.html
+
+a. winsw 다운로드
+https://github.com/winsw/winsw/releases 
+ 최종 정식 버전 (v2.9.0)
+
+b. 배포파일 경로에 저장
+WinSW.NET4.exe -> BucheonBot.exe
+BucheonBot-최신버전.war -> BucheonBot.war
+BucheonBot.xml 파일 생성
+
+c. BucheonBot.xml 편집
+
+<service>
+  <!-- ID of the service. It should be unique across the Windows system-->
+  <id>BucheonBot</id>
+  <!-- Display name of the service -->
+  <name>BucheonBot</name>
+  <!-- Service description -->
+  <description>부천성모정보운영봇</description>
+  
+  <!-- Path to the executable, which should be started -->
+  <executable>java</executable>
+  <arguments>-jar "BucheonBot.war"</arguments>
+  <logmode>rotate</logmode>
+</service>
+
+d. 서비스 등록
+CMD 관리자 권한으로 실행
+$ BucheonBot.exe install
+
+e. 서비스 확인 및 실행
+윈도우+R에서 services.msc실행
+BucheonBot 서비스 시작

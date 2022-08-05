@@ -21,11 +21,29 @@
 		</encoder>
 	</appender> 
 
-	<logger name="gs.teamup.bot" level="DEBUG"/>
+    <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">
+        <webhookUri>https://hooks.slack.com/services/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</webhookUri>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
+        </layout>
+        <username>BIObot</username>
+        <iconEmoji>:anger:</iconEmoji>
+        <colorCoding>true</colorCoding>
+    </appender>
+
+    <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK"/>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+	<logger name="gs.teamup.bot" level="ERROR"/>
 	<logger name="org.springframework" level="ERROR"/>
 
 	<root level="ERROR">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
+		<appender-ref ref="ASYNC_SLACK" />
 	</root>
 </configuration>

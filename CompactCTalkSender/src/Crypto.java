@@ -6,7 +6,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 public class Crypto {
      
@@ -35,7 +35,7 @@ public class Crypto {
     }
     
     public String decode(String encoded) throws Exception{
-    	byte[] encodedbytes = Base64.decode(encoded);
+    	byte[] encodedbytes = Base64.decodeBase64(encoded);
     	byte[] bytes =  decode(encodedbytes);
     	return new String(bytes, "UTF-8");
     }
@@ -43,7 +43,7 @@ public class Crypto {
     public String encode(String s) throws Exception{
     	byte[] bytes = s.getBytes("UTF-8");
     	byte[] encodedbytes = encode(bytes);
-    	return Base64.encode(encodedbytes);
+    	return new String(Base64.encodeBase64(encodedbytes));
     }
      
      
